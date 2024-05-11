@@ -1,0 +1,135 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./css/post-req.css">
+    <script>
+      $(document).ready(function()
+      {
+        let auser=localStorage.getItem("activeuser");
+      $("#inputEmail").val(auser);
+
+      $("#backBtn").click(function(){
+        localStorage.removeItem("activeuser");
+          location.href="dash-citizen.html";
+      });
+      });
+    </script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary ">
+    <div class="container-fluid box">
+      <button type="button" class="btn btn-success" value="Back" id="backBtn">
+        <-  Back
+      </button>
+      <a class="navbar-brand" style=" margin-left: 10px; font-size: 2rem; font-family: Cooper;" href="#">Post-Requirements</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      </div>
+    </div>
+  </nav>
+    <div id="MainBox">
+      <div id="prBox">
+        <form method="post">
+          <div class="row">  
+          <div class="col-md-2">
+                <label for="inputId" class="form-label">Unique-Id</label>
+              </div>
+          <div class="col-md-4"> 
+            <input type="text" class="form-control" id="inputId" name="inputId">
+          </div>
+          <div class="col-md-2">
+            <label for="inputEmail" class="form-label">Email</label>
+          </div>
+      <div class="col-md-4"> 
+        <input type="email" class="form-control"readonly id="inputEmail" name="inputEmail">
+      </div>
+    </div>
+      <br>
+      <div class="row">  
+        <div class="col-md-2">
+          <label for="petType" class="form-label">Pet-Type :</label>
+            </div>
+        <div class="col-md-4"> 
+          <input type="text" class="form-control" id="petType" name="petType">
+        </div>
+
+        <div class="col-md-2">
+          <label for="inputCity" class="form-label">City :</label>
+            </div>
+        <div class="col-md-4"> 
+          <input type="text" class="form-control" id="inputCity" name="inputCity">
+        </div>
+      </div>
+      <br>
+      <div class="row">  
+        <div class="col-md-2">
+          <label for="dateFrom" class="form-label">Date From :</label>
+            </div>
+        <div class="col-md-4"> 
+          <input type="date" class="form-control" id="dateFrom" name="dateFrom">
+        </div>
+        <div class="col-md-2">
+          <label for="dateTo" class="form-label">Date To :</label>
+          </div>
+        <div class="col-md-4"> 
+          <input type="date" class="form-control" id="dateTo" name="dateTo">
+        </div>
+      </div>
+
+    <br>
+    <div class="row">
+      <div class="col-md-101">
+        <label for="info">More Information About Pet</label><br><br>
+        <textarea name="info" id="info" cols="140" rows="4"></textarea>
+      </div>
+    </div>
+      <br>
+      <div class="row offset-md-5">
+        <div class="col-md-12">
+          <button type="submit" class="btn btn-primary" id="btnPublish" name="btnPublish" formaction="/post-requirement">Publish Now</button>
+        </div> 
+      </div>
+    
+        <!-- <div class="col-md-2">
+          <label for="inputEmail" class="form-label">Email</label>
+        </div>
+    <div class="col-md-4"> 
+      <input type="email" class="form-control" id="inputEmail" name="inputEmail">
+    </div> -->
+            <!-- 
+            <div class="col-6">
+              <label for="petType" class="form-label">Pet-Type :</label>
+              <input type="text" class="form-control" id="petType" name="petType">
+            </div>
+            
+            <div class="col-md-6">
+                <label for="dateFrom" class="form-label">Date From :</label>
+                <input type="date" class="form-control" id="dateFrom" name="dateFrom">
+            </div>
+            <div class="col-md-6">
+                <label for="dateTo" class="form-label">Date To :</label>
+                <input type="date" class="form-control" id="dateTo" name="dateTo">
+            </div>
+            <div class="col-12">
+                <label for="info">More Information About Pet</label><br>
+                <textarea name="info" id="info" cols="150" rows="5"></textarea>
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary" id="btnPublish" name="btnPublish" formaction="/post-requirement">Publish Now</button>
+              </div> -->
+            
+          </form>
+        </div>
+    </div>
+</body>
+</html>

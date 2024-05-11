@@ -1,0 +1,237 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js" integrity="sha512-KZmyTq3PLx9EZl0RHShHQuXtrvdJ+m35tuOiwlcZfs/rE7NZv29ygNA8SFCkMXTnYZQK2OX0Gm2qKGfvWEtRXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/ctf.css">
+    <script>
+        $(document).ready(function(){
+            let auser=localStorage.getItem("activeuser");
+           
+        //    let nuser =localStorage.getItem("activeName");
+        //    let muser= localStorage.getItem("activeMob");
+            $("#backBtn").click(function(){
+        localStorage.removeItem("activeuser");
+          location.href="dash-citizen.html";
+      });
+        });
+    </script>
+    <script>
+        
+         var module=angular.module("myModule",[]);
+            var controller=module.controller("myController",function($scope,$http)
+            {
+                $scope.doFetchAll=function(){
+                let url = "/fetch-user-data";
+
+                $http.get(url).then(done, fail);
+
+                 function done(resp)
+                    {
+                     $scope.allRecords = resp.data;
+                     alert ($scope.allRecords);
+                    }
+                 function fail(err){
+                 alert(err.data);
+
+        }
+    }
+    $scope.doFetchCity=function()
+    {
+
+        let url ="/do-fetch-city";
+        $http.get(url).then(done,fail);
+
+        function done(resp)
+        {
+            let len = resp.data.length;
+            $scope.cities=[];
+            for(let i=0;i<len;i++)
+            {
+                $scope.cities.push(resp.data[i].City);
+            }
+        }
+        function fail(err)
+        {
+            alert(err.data);
+        }
+    }
+    $scope.doFetchPets=function(){
+        let url="/do-fetch-pets";
+        $http.get(url).then(done,fail);
+
+        function done(resp)
+        {
+            let len = resp.data.length;
+            $scope.AllPets = [];
+
+            let PetSet = new Set();
+
+            for(let i=0;i<len;i++)
+            {
+                let str = resp.data[i].Preferred_Pet;
+                let subary= str.split(",");
+
+                for(let j=0; j<subary.length;j++)
+                {
+                    PetSet.add(subary[j]);
+                }
+            }
+            $scope.AllPets = Array.from(PetSet);
+        }
+        function fail(err){
+            alert(err.data);
+        }
+    }
+    $scope.doFetchCaretaker=function()
+    {
+        let url="/do-fetch-caretaker?City="+$scope.selCity+"&Preferred_Pet="+$scope.selPet;
+        $http.get(url).then(done,fail);
+
+        function done(resp)
+        {
+            $scope.allRecords=resp.data;
+        }
+        function fail(err){
+            alert(err.data);
+        }
+    }
+    // --- 
+    $scope.showAllData=function(obj)
+    {
+            $scope.full=obj;
+    }
+    $scope.doFetch=function(){
+        var au=localStorage.getItem("activeuser");
+        $("#user").html(au);
+        $scope.emailid=au;
+        // var n=localStorage.getItem("activeName");
+        // $("na").html(n);
+        // $scope.name=n;
+        // var m=localStorage.getItem("activeMob");
+        // $("ph").html(m);
+        // $scope.name=m;
+    }
+    $scope.SendEmail=function(obj)
+    {
+        // alert("ook");
+        let url="/send-email?Email="+obj.Email+"&Email_Id="+ localStorage.getItem("activeuser")+"&Name="+obj.Name;
+        $http.get(url).then(done,fail);
+
+        function done(resp)
+        {
+        //    alert($scope.allRecords=resp.data);
+            alert(resp.data);
+        }
+        function fail(err)
+        {
+            alert(err.data);
+        }
+    }
+
+});
+    </script>
+    
+</head>
+<body ng-app="myModule" ng-controller="myController" ng-init="doFetchCity(); doFetchPets();">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary ">
+        <div class="container-fluid box">
+          <button type="button" class="btn btn-success" value="Back" id="backBtn">
+            <-  Back
+          </button>
+          <a class="navbar-brand" style=" margin-left: 30px; font-size: 2rem; font-family: Cooper;" href="#">Caretaker-Finder</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          </div>
+        </div>
+      </nav>
+      <span id="user">*</span>
+    
+      <div id="MainBox">
+        <div id="prBox">
+    <form >
+       <br><br>
+        <div class="row offset-md-2">
+            <div class="col-md-6">
+                <label for="selCity">Select Your City</label>
+                <select  class="form-select" name="sCity" id="sCity" ng-model="selCity">
+            <option value="Select">Select</option>
+            <option ng-repeat="City in cities" value="{{City}}">{{City}}</option>
+        </select>
+            </div>
+            <div class="col-md-4">
+                <label for="sPet">Pets</label>
+                <select  class="form-select" name="sPet" id="sPet" ng-model="selPet">
+                    <option value="">Select</option>
+                    <option ng-repeat="Preferred_Pet in AllPets" value="{{Preferred_Pet}}">{{Preferred_Pet}}</option>
+                </select>
+            </div>
+        </div>
+        <br><br>
+        <center><input type="button" class="btn btn-primary" id="FetchBtn" ng-click="doFetchCaretaker()" value="Fetch Caretaker"></center>
+    </div>
+    <br><br>
+ 
+        <!-- ----  -->
+        
+       
+        
+    </form>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4" ng-repeat="obj in allRecords" >
+                <div class="card" id="card1">
+                    <img src="uploads/{{obj.Id_Proof}}"  class="card-img-top" alt="...">
+                    <div class="card-body">                        
+                      <h3 class="card-title">Name : {{obj.Name}}</h3>
+                      <p class="card-text"> Email Id : {{obj.Email}}</p>
+                      <p class="card-text"> Experience : {{obj.Experience}} Years</p>
+                      <p class="card-text"> Firm Name : {{obj.Firm_Name}}</p>
+                      <p class="card-text"> Preferred-Pets : {{obj.Preferred_Pet}}</p>
+                      <center><a href="#careTaker" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#careTaker" ng-click="showAllData(obj);">Details</a></center>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+    <!-- --- -->
+    <div class="modal" tabindex="-1" id="careTaker" ng-init="doFetch();" id="card1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3 class="modal-title">Care Taker Details</h3>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img src="uploads/{{full.Id_Proof}}" height="150px" width="20px" class="card-img-top" alt="...">
+                <br><br>
+                <p> Email Id : {{full.Email}}</p>
+                <p> Name : {{full.Name}}</p>
+                <p> Contact : {{full.Contact}}</p>
+                <p> Address : {{full.Address}}</p>
+                <p> City : {{full.City}}</p>
+                <p> Firm-Na{{full.Firm_Name}}</p>
+                <p> Experience : {{full.Experience}}</p>
+                <p> Preferred-Pets : {{full.Preferred_Pet}}</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <!-- <span id="user">*</span> -->
+              <button type="button" class="btn btn-primary" ng-click="SendEmail(full)">Intrested</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+</html>

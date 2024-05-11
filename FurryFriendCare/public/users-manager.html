@@ -1,0 +1,170 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js" integrity="sha512-KZmyTq3PLx9EZl0RHShHQuXtrvdJ+m35tuOiwlcZfs/rE7NZv29ygNA8SFCkMXTnYZQK2OX0Gm2qKGfvWEtRXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+         var module=angular.module("myModule",[]);
+         var controller=module.controller("myController",function($scope,$http){
+            $scope.Dofetch=function()
+            {
+                let url="/angular-fetch";
+
+                $http.get(url).then(allIsWell,notWell);
+                        
+                        function allIsWell(resp)
+                         {
+                            // alert(resp.data);
+                            // alert(JSON.stringify(resp.data));
+                            $scope.allRecords=resp.data;
+                         }
+                        function notWell(resp)
+                         {
+                            alert(resp.data);
+                         }
+            }
+            // ---------- 
+            $scope.doBlock=function(Email)
+            {
+                if(confirm("Do You want to block the user")==false)
+                {
+                return;
+                }
+                let url="/angular-block?emailkuch="+Email;
+                $http.get(url).then(allIsWell,notWell);
+
+                function allIsWell(resp)
+                {
+                    alert(resp.data);
+                    $scope.Dofetch();
+                }
+                
+                function notWell(resp)
+                {
+                    alert(resp.data);
+                }
+
+            }
+            // --- 
+            $scope.doResume=function(Email)
+            { 
+                if(confirm("Do You want to Unblock the user")==false)
+                {
+                return;
+                }
+                let url = "/angular-resume?emailkuch="+Email;
+                $http.get(url).then(allIsWell,notWell);
+
+                function allIsWell(resp)
+                {
+                    alert(resp.data);
+                    $scope.Dofetch();
+                }
+                function notWell(resp)
+                {
+                    alert(resp.data);
+                }
+            }
+            
+
+        });
+    </script>
+    <style>
+        *{
+    margin: 0px;
+    padding: 0px;
+}
+.box{
+    background-color: #219ebc; 
+    /* background: rgb(255,172,208);
+background: radial-gradient(circle, rgba(255,172,208,1) 0%, rgba(34,90,157,1) 100%); */ 
+   height: 100px;
+   margin: 0px;
+   padding:0px;
+}
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+    
+        
+        table {
+            margin-top: 50px;
+            width: 1000px;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        input[type="button"] {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        input[type="button"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body ng-app="myModule" ng-controller="myController" ng-init="Dofetch()">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary ">
+        <div class="container-fluid box">
+          <a class="navbar-brand" style=" margin-left: 30px; font-size: 2rem; font-family: Cooper;" href="#">User-Manager</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          </div>
+        </div>
+      </nav>
+   <center>
+   
+    <table >
+        <tr>
+            <th>Sr.No.</th>
+            <th>Email Id</th>
+            <th>Password</th>
+            <th>User Type</th>
+            <th>Status</th>
+            <th colspan="2">Buttons</th>
+        </tr>
+        <tr ng-repeat="obj in allRecords"> 
+            <td>{{$index}}</td>
+            <td>{{obj.Email}}</td>
+            <td>{{obj.Password}}</td>
+            <td>{{obj.User_Type}}</td>
+            <td>{{obj.status}}</td>
+            <td><input type="button" value="Block" ng-click="doBlock(obj.Email);"></td>
+            <td><input type="button" value="Resume" ng-click="doResume(obj.Email);"></td>
+        </tr>
+    </table>
+    
+   </center>
+</body>
+</html>

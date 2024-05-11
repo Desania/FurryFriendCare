@@ -1,0 +1,149 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/care-taker-profile.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+    <script>
+        function doPrev(refFile,prev) {
+          const [file] = refFile.files;
+          if (file) 
+          {
+            prev.src = URL.createObjectURL(file);
+          }
+        }
+    </script>
+    <script>
+      $(document).ready(function(){
+        let Em=localStorage.getItem("activeuser");
+        $("#backBtn").click(function(){
+          location.href="dash-caretaker.html";
+        });
+      $("#btnFetch").click(function(){
+                alert($("#inputEmail").val());
+                let obj={
+                    type:"get",
+                    url:"/care-Taker-fetch",
+                    data:{
+                        myEmail: $("#inputEmail").val() //will be stored in query object
+                        //myPwd: $("#txtEmail").val()
+                    }
+                }
+             $.ajax(obj).done(function(respoObjAry)
+             {
+                if(respoObjAry.length==0)
+                {
+                    alert("Invalid ID");
+                    // $("#btnSave").prop("disabled",false);
+                }
+                else
+                {
+                   
+                    alert(JSON.stringify(respoObjAry));
+                    $("#inputName").val(respoObjAry[0].Name);
+                    $("#inputContact").val(respoObjAry[0].Contact);
+                    $("#inputAddress").val(respoObjAry[0].Address);
+                    $("#inputCity").val(respoObjAry[0].City);
+                    $("#inputFirm").val(respoObjAry[0].Firm_Name);
+                    $("#inputExp").val(respoObjAry[0].Experience);
+                    $("#inputPet").val(respoObjAry[0].Preferred_Pet);
+                    $("#prev").attr("src","uploads/"+respoObjAry[0].Id_Proof);
+                    $("#hdn").val(respoObjAry[0].Id_Proof);
+                    $("#hdn").val(respoObjAry[0].Preferred_Pet);
+
+                   
+                }
+
+             }).fail(function(err){
+                    alert(err);
+             });    
+            });
+        });
+      </script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary ">
+    <div class="container-fluid box">
+      <button type="button" class="btn btn-success" value="Back" id="backBtn">
+        <-  Back
+      </button>
+      <a class="navbar-brand" style=" margin-left: 30px; font-size: 2rem; font-family: Cooper;" href="#">Edit Profile</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      </div>
+    </div>
+  </nav>
+  <div id="MainBox">
+    <div id="prBox">
+    <form class="row g-3" method="post" enctype="multipart/form-data">
+        <center><h1>Care-Taker-Profile</h1></center>
+  <div class="col-md-6">
+    <label for="inputEmail" class="form-label">Email</label>
+    <input type="email" class="form-control" id="inputEmail" name="inputEmail">
+  </div>
+  <div class="col-md-6">
+    <button type="button" class="btn btn-primary mt-4 mx-5" id="btnFetch">Fetch</button>
+  </div>
+  <div class="col-md-6">
+    <label for="inputName" class="form-label">Name</label>
+    <input type="text" class="form-control" id="inputName" name="inputName">
+  </div>
+  <div class="col-6">
+    <label for="inputContact" class="form-label">Contact No.</label>
+    <input type="text" class="form-control" id="inputContact" name="inputContact">
+  </div>
+  <div class="col-md-6">
+    <label for="inputAddress" class="form-label">Address</label>
+    <input type="text" class="form-control" id="inputAddress" name="inputAddress">
+  </div>
+  
+  <div class="col-md-6">
+    <label for="inputCity" class="form-label">City</label>
+    <input type="text" class="form-control" id="inputCity" name="inputCity">
+  </div>
+  <div class="col-md-6">
+    <label for="inputFirm" class="form-label">Firm Name(if any)</label>
+    <input type="text" class="form-control" id="inputFirm" name="inputFirm" value="No Any Firm">
+  </div>
+  <div class="col-md-6">
+    <label for="inputExp" class="form-label">Experience</label>
+    <input type="number" class="form-control" id="inputExp" name="inputExp" placeholder="Experience In years">
+  </div>
+  <div class="col-md-6">
+    <label for="inputPet" class="form-label">Preferred-Pet (You Can Select Multiple Options)</label>
+    <select id="inputPet" name="inputPet" class="form-select" multiple>
+      <option>None Of These</option>
+      <option>Cat</option>
+      <option>Dog</option>
+      <option>Birds</option>
+      <option>Buffalo</option>
+      <option>Cow</option>
+    </select>
+  </div>
+  <div class="col-md-4">
+    <label for="inputId" class="form-label">Id Proof :</label>
+    <input type="File" class="form-control" id="inputId" name="inputId" onchange="doPrev(this,prev);">
+  </div>
+  <div class="col-md-2">
+    <img src="uploads/profilepic-removebg-preview.png" alt="" width="100" height="100" id="prev" name="prev">
+    <input type="hidden" id="hdn" name="hdn">
+  </div>
+  
+  <div class="col-4 offset-8">
+    <button type="submit" class="btn btn-primary" formaction="/care-Taker-Send">Send To Server</button>
+    <button type="submit" class="btn btn-primary" formaction="/care-Taker-Modify">Modify</button>
+  </div>
+</form>
+</div>
+</div>
+</body>
+</html>

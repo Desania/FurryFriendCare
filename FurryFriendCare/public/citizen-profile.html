@@ -1,0 +1,219 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js" integrity="sha512-KZmyTq3PLx9EZl0RHShHQuXtrvdJ+m35tuOiwlcZfs/rE7NZv29ygNA8SFCkMXTnYZQK2OX0Gm2qKGfvWEtRXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css\citizen-profile.css">
+    <script>
+      function doPrev(refFile,prev) {
+          const [file] = refFile.files
+          if (file) {
+              prev.src = URL.createObjectURL(file)
+          }
+      }
+  </script>
+  <script>
+    $(document).ready(function(){
+      let auser=localStorage.getItem("activeuser");
+      $("#inputEmail").val(auser);
+      // localStorage.setItem("activeName",First_Name);
+      // localStorage.setItem("activeMob",Mobile);
+      $("#backBtn").click(function(){
+        localStorage.removeItem("activeuser");
+          location.href="dash-citizen.html";
+      });
+      $("#inputEmail").blur(function(){
+        let obj=
+        {
+          type:"get",
+          url:"/check-email",
+          data:
+          {
+            Email: $("#inputEmail").val()
+          }
+
+        }
+        $.ajax(obj).done(function(respo){
+          if(respo.length==0)
+          {
+            alert("available email id");
+            $("#btnSave").prop("disabled",false);
+          }
+          else
+          {
+            alert("email id already used !! You Can only Edit and search data!!")
+          // $("#btnEdit").prop("disabled",false);
+          $("#btnSearch").prop("disabled",false);
+          }
+        }).fail(function(err)
+        {
+          alert(err);
+        });
+      });
+      // ----- 
+      $("#btnSearch").click(function(){
+                //alert($("#txtEmail").val());
+                let obj={
+                    type:"get",
+                    url:"/json-fetch-one",
+                    data:{
+                        myEmail: $("#inputEmail").val() //will be stored in query object
+                        //myPwd: $("#txtEmail").val()
+                    }
+                }
+             $.ajax(obj).done(function(respoObjAry)
+             {
+                if(respoObjAry.length==0)
+                {
+                    alert("Invalid ID");
+                    // $("#btnSave").prop("disabled",false);
+                }
+                else
+                {
+                    $("#btnEdit").prop("disabled",false);
+                    alert(JSON.stringify(respoObjAry));
+                    $("#inputFName").val(respoObjAry[0].First_Name);
+                    $("#inputLName").val(respoObjAry[0].Last_Name);
+                    $("#inputAddress").val(respoObjAry[0].Address);
+                    $("#inputMobile").val(respoObjAry[0].Mobile);
+                    $("#inputState").val(respoObjAry[0].State);
+                    $("#inputCity").val(respoObjAry[0].City);
+                    $("#prev").attr("src","uploads/"+respoObjAry[0].Image);
+                    $("#hdn").val(respoObjAry[0].Image);
+                   
+                }
+
+             }).fail(function(err){
+                    alert(err);
+             });    
+
+            });
+    });
+  </script>
+
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary ">
+    <div class="container-fluid box">
+      <button type="button" class="btn btn-success" value="Back" id="backBtn">
+        <-  Back
+      </button>
+      <a class="navbar-brand" style=" margin-left: 30px; font-size: 2rem; font-family: Cooper;" href="#">Edit Profile</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      </div>
+    </div>
+  </nav>
+  <div id="MainBox">
+ <div id="prBox">
+      <form method="post" enctype="multipart/form-data">
+
+            <div class="row-g-3">
+              <center>    
+               <div class="row offset-md-1">
+                <div class="col-md-4">
+                  <img src="./uploads/profilepic-removebg-preview.png" height="200px" width="200px" id="prev" name="prev"> </div>
+      
+                <div class="col-md-4" style="margin-top:90px ;">  
+                  <input style=" font-family: Arial Rounded MT; font-size: 20px;" type="file" id="inputImg" name="inputImg" onchange="doPrev(this,prev)"><br>
+                  <input type="hidden" id="hdn" name="hdn"></div>
+               </div>
+     
+      </center>
+      <br>
+              <div class="row offset-md-1">
+                <div class="col-md-2">
+                  <label for="inputEmail" class="form-label fs-4">Email</label>
+                </div>
+                <div class="col-md-4">
+                  <input type="email" readonly class="form-control" id="inputEmail"name="inputEmail">
+                </div>
+                <div class="col-md-4">
+                  <button type="button" class="btn btn-primary fs-5 " id="btnSearch" name="btnSearch" disabled>Search</button>
+                </div>
+              </div>  
+              <br> 
+              <div class="row offset-md-1">
+                <div class="col-md-2">
+                  <label for="inputFName" class="form-label fs-4">First Name</label>
+                </div>
+                <div class="col-md-3">  
+                  <input  type="text" class="form-control" id="inputFName" name="inputFName">
+                </div>
+                <div class="col-md-2">
+                  <label for="inputLName" class="form-label fs-4">Last Name</label>
+                </div>
+                <div class="col-md-3">
+                  <input type="text" class="form-control" id="inputLName" name="inputLName">
+                </div>
+              </div>
+              <br>
+              <div class="row offset-md-1">
+                <div class="col-md-2">
+                  <label for="inputAddress" class="form-label fs-4">Address</label>
+                </div>
+                <div class="col-md-8">
+                  <input  type="text" class="form-control" id="inputAddress" name="inputAddress">
+                </div>
+              </div><br>
+              <div class="row offset-md-1">
+                <div class="col-md-2">
+                  <label for="inputMobile" class="form-label fs-4">Mobile  No.</label>
+                </div>
+                <div class="col-md-8">
+    
+                  <input type="text" class="form-control" id="inputMobile" name="inputMobile">
+                </div>
+              </div>
+              <br>
+              <div class="row offset-md-1">
+                <div class="col-md-2"> 
+                  <label for="inputState" class="form-label fs-4">State</label>
+                </div>
+                <div class="col-md-3">
+                  <input  type="text" class="form-control" id="inputState" name="inputState">
+                </div>
+                <div class="col-md-2"> 
+                  <label for="inputCity" class="form-label fs-4">City</label>
+                </div>
+                <div class="col-md-3">
+                  <input type="text" class="form-control" id="inputCity" name="inputCity">
+        
+                <!-- <select id="disabledSelect" class="form-select" name="inputCity" id="inputCity">
+                    <option value="select">Select</option>
+                    <option value="Bathinda">Bathinda</option>
+                    <option value="Chandigarh">Chandigarh</option>
+                    <option value="Jalandhar">Jalandhar</option>
+                    <option value="FaridKot">FaridKot</option>
+                    <option value="Deharadun">Deharadun</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Moga">Delhi</option>
+                  </select> -->
+                </div>
+              </div><br>
+              <div class="row offset-md-6">
+                <div class="col-md-4 bb">
+                  <button type="submit" class="btn btn-primary fs-4 b1" id="btnEdit" formaction="/LogIn-Edit" disabled>Edit</button>
+                  <button type="submit" class="btn btn-primary fs-4 b2" id="btnSave" formaction="/LogIn-Save" disabled>Save</button>
+                </div>
+              </div>
+
+            
+            </div>
+        </form>
+      </div>
+
+  </div>
+       
+</body>
+</html>
